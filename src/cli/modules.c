@@ -10,6 +10,10 @@
 #include "timer.wren.inc"
 
 extern void directoryList(WrenVM* vm);
+extern void envGet(WrenVM* vm);
+extern void envGetAll(WrenVM* vm);
+extern void envSet(WrenVM* vm);
+extern void envRemove(WrenVM* vm);
 extern void fileAllocate(WrenVM* vm);
 extern void fileFinalize(void* data);
 extern void fileDelete(WrenVM* vm);
@@ -169,6 +173,12 @@ static ModuleRegistry modules[] =
       STATIC_METHOD("allArguments", processAllArguments)
       STATIC_METHOD("version", processVersion)
       STATIC_METHOD("cwd", processCwd)
+    END_CLASS
+    CLASS(Env)
+      STATIC_METHOD("envGet(_)", envGet)
+      STATIC_METHOD("envSet(_)", envSet)
+      STATIC_METHOD("envRemove(_)", envRemove)
+      STATIC_METHOD("envGetAll", envGetAll)
     END_CLASS
   END_MODULE
   MODULE(repl)
