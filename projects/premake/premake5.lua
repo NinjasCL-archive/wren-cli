@@ -116,6 +116,7 @@ project "wren_cli"
   -- todo: this has to be tested
   filter "system:macosx"
     systemversion "10.12"
+    links { "/Library/Frameworks/CoreFoundation.framework", "/Library/Frameworks/Security.framework" }
     defines { "_DARWIN_USE_64_BIT_INODE=1", "_DARWIN_UNLIMITED_SELECT=1" }
     files {
       "../../deps/libuv/src/unix/bsd-ifaddrs.c",

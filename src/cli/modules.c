@@ -9,6 +9,9 @@
 #include "scheduler.wren.inc"
 #include "timer.wren.inc"
 
+// We add our generated server.wren.inc file
+#include "server.wren.inc"
+
 extern void directoryList(WrenVM* vm);
 extern void fileAllocate(WrenVM* vm);
 extern void fileFinalize(void* data);
@@ -48,6 +51,8 @@ extern void stdinReadStop(WrenVM* vm);
 extern void stdoutFlush(WrenVM* vm);
 extern void schedulerCaptureMethods(WrenVM* vm);
 extern void timerStartTimer(WrenVM* vm);
+
+extern void httpServer(WrenVM* vm);
 
 // The maximum number of foreign methods a single class defines. Ideally, we
 // would use variable-length arrays for each class in the table below, but
@@ -181,6 +186,11 @@ static ModuleRegistry modules[] =
   MODULE(timer)
     CLASS(Timer)
       STATIC_METHOD("startTimer_(_,_)", timerStartTimer)
+    END_CLASS
+  END_MODULE
+  MODULE(server)
+    CLASS(Http)
+      STATIC_METHOD("serve()", httpServer)
     END_CLASS
   END_MODULE
 
