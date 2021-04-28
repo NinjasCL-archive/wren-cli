@@ -40,6 +40,9 @@
     <Filter Include="src\cli">
       <UniqueIdentifier>{F4F22FA9-60D2-AE44-69EA-391BD54815A6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\go">
+      <UniqueIdentifier>{B24D661C-9EEF-90F2-87AA-A44673EB1743}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\module">
       <UniqueIdentifier>{62A0916B-4E58-D3B8-B75F-AC14A3366EA9}</UniqueIdentifier>
     </Filter>
@@ -153,6 +156,9 @@
     <ClInclude Include="..\..\deps\wren\src\vm\wren_debug.h">
       <Filter>deps\wren\src\vm</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\deps\wren\src\vm\wren_math.h">
+      <Filter>deps\wren\src\vm</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\deps\wren\src\vm\wren_opcodes.h">
       <Filter>deps\wren\src\vm</Filter>
     </ClInclude>
@@ -180,6 +186,9 @@
     <ClInclude Include="..\..\src\cli\vm.h">
       <Filter>src\cli</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\go\libhttp.h">
+      <Filter>src\go</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\module\io.h">
       <Filter>src\module</Filter>
     </ClInclude>
@@ -190,6 +199,9 @@
       <Filter>src\module</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\module\scheduler.h">
+      <Filter>src\module</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\module\server.h">
       <Filter>src\module</Filter>
     </ClInclude>
   </ItemGroup>
@@ -350,6 +362,9 @@
     <ClCompile Include="..\..\src\module\scheduler.c">
       <Filter>src\module</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\module\server.c">
+      <Filter>src\module</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\module\timer.c">
       <Filter>src\module</Filter>
     </ClCompile>
@@ -365,6 +380,9 @@
       <Filter>src\module</Filter>
     </None>
     <None Include="..\..\src\module\scheduler.wren.inc">
+      <Filter>src\module</Filter>
+    </None>
+    <None Include="..\..\src\module\server.wren.inc">
       <Filter>src\module</Filter>
     </None>
     <None Include="..\..\src\module\timer.wren.inc">

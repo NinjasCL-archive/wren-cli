@@ -19,7 +19,7 @@ endif
 # #############################################
 
 RESCOMP = windres
-INCLUDES += -I../../src/cli -I../../src/module -I../../deps/wren/include -I../../deps/wren/src/vm -I../../deps/wren/src/optional -I../../deps/libuv/include -I../../deps/libuv/src
+INCLUDES += -I../../src/cli -I../../src/module -I../../src/go -I../../deps/wren/include -I../../deps/wren/src/vm -I../../deps/wren/src/optional -I../../deps/libuv/include -I../../deps/libuv/src
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
@@ -130,6 +130,7 @@ OBJECTS += $(OBJDIR)/random-sysctl-linux.o
 OBJECTS += $(OBJDIR)/random.o
 OBJECTS += $(OBJDIR)/repl.o
 OBJECTS += $(OBJDIR)/scheduler.o
+OBJECTS += $(OBJDIR)/server.o
 OBJECTS += $(OBJDIR)/signal.o
 OBJECTS += $(OBJDIR)/stream.o
 OBJECTS += $(OBJDIR)/strscpy.o
@@ -372,6 +373,9 @@ $(OBJDIR)/repl.o: ../../src/module/repl.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/scheduler.o: ../../src/module/scheduler.c
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/server.o: ../../src/module/server.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/timer1.o: ../../src/module/timer.c

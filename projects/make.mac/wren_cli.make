@@ -27,11 +27,11 @@ endif
 ifeq ($(origin AR), default)
   AR = ar
 endif
-INCLUDES += -I../../src/go -I../../src/cli -I../../src/module -I../../deps/wren/include -I../../deps/wren/src/vm -I../../deps/wren/src/optional -I../../deps/libuv/include -I../../deps/libuv/src
+INCLUDES += -I../../src/cli -I../../src/module -I../../src/go -I../../deps/wren/include -I../../deps/wren/src/vm -I../../deps/wren/src/optional -I../../deps/libuv/include -I../../deps/libuv/src
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-LIBS += -L../../src/go -lhttp -framework CoreFoundation -framework Security
+LIBS += -framework CoreFoundation -framework Security -lhttp
 LDDEPS +=
 LINKCMD = $(CC) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
@@ -48,7 +48,7 @@ OBJDIR = obj/64bit/Release
 DEFINES += -DNDEBUG -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_UNLIMITED_SELECT=1
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O3 -std=c99
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O3
-ALL_LDFLAGS += $(LDFLAGS) -m64
+ALL_LDFLAGS += $(LDFLAGS) -L/Library/Frameworks -m64 -L../../src/go
 
 else ifeq ($(config),release_32bit)
 TARGETDIR = ../../bin
@@ -57,7 +57,7 @@ OBJDIR = obj/32bit/Release
 DEFINES += -DNDEBUG -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_UNLIMITED_SELECT=1
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m32 -O3 -std=c99
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m32 -O3
-ALL_LDFLAGS += $(LDFLAGS) -m32
+ALL_LDFLAGS += $(LDFLAGS) -L/Library/Frameworks -m32 -L../../src/go
 
 else ifeq ($(config),release_64bit-no-nan-tagging)
 TARGETDIR = ../../bin
@@ -66,7 +66,7 @@ OBJDIR = obj/64bit-no-nan-tagging/Release
 DEFINES += -DNDEBUG -DWREN_NAN_TAGGING=0 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_UNLIMITED_SELECT=1
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O3 -std=c99
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O3
-ALL_LDFLAGS += $(LDFLAGS)
+ALL_LDFLAGS += $(LDFLAGS) -L/Library/Frameworks -L../../src/go
 
 else ifeq ($(config),debug_64bit)
 TARGETDIR = ../../bin
@@ -75,7 +75,7 @@ OBJDIR = obj/64bit/Debug
 DEFINES += -DDEBUG -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_UNLIMITED_SELECT=1
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c99
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g
-ALL_LDFLAGS += $(LDFLAGS) -m64
+ALL_LDFLAGS += $(LDFLAGS) -L/Library/Frameworks -m64 -L../../src/go
 
 else ifeq ($(config),debug_32bit)
 TARGETDIR = ../../bin
@@ -84,7 +84,7 @@ OBJDIR = obj/32bit/Debug
 DEFINES += -DDEBUG -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_UNLIMITED_SELECT=1
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m32 -g -std=c99
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m32 -g
-ALL_LDFLAGS += $(LDFLAGS) -m32
+ALL_LDFLAGS += $(LDFLAGS) -L/Library/Frameworks -m32 -L../../src/go
 
 else ifeq ($(config),debug_64bit-no-nan-tagging)
 TARGETDIR = ../../bin
@@ -93,7 +93,7 @@ OBJDIR = obj/64bit-no-nan-tagging/Debug
 DEFINES += -DDEBUG -DWREN_NAN_TAGGING=0 -D_DARWIN_USE_64_BIT_INODE=1 -D_DARWIN_UNLIMITED_SELECT=1
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -std=c99
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g
-ALL_LDFLAGS += $(LDFLAGS)
+ALL_LDFLAGS += $(LDFLAGS) -L/Library/Frameworks -L../../src/go
 
 else
   $(error "invalid configuration $(config)")
@@ -138,6 +138,7 @@ OBJECTS += $(OBJDIR)/random-getentropy.o
 OBJECTS += $(OBJDIR)/random.o
 OBJECTS += $(OBJDIR)/repl.o
 OBJECTS += $(OBJDIR)/scheduler.o
+OBJECTS += $(OBJDIR)/server.o
 OBJECTS += $(OBJDIR)/signal.o
 OBJECTS += $(OBJDIR)/stream.o
 OBJECTS += $(OBJDIR)/strscpy.o
@@ -161,7 +162,6 @@ OBJECTS += $(OBJDIR)/wren_primitive.o
 OBJECTS += $(OBJDIR)/wren_utils.o
 OBJECTS += $(OBJDIR)/wren_value.o
 OBJECTS += $(OBJDIR)/wren_vm.o
-OBJECTS += $(OBJDIR)/server.o
 
 # Rules
 # #############################################
@@ -379,10 +379,10 @@ $(OBJDIR)/repl.o: ../../src/module/repl.c
 $(OBJDIR)/scheduler.o: ../../src/module/scheduler.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/timer1.o: ../../src/module/timer.c
+$(OBJDIR)/server.o: ../../src/module/server.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/server.o: ../../src/module/server.c
+$(OBJDIR)/timer1.o: ../../src/module/timer.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

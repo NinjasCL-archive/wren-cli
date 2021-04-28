@@ -58,6 +58,7 @@ project "wren_cli"
   includedirs {
     "../../src/cli",
     "../../src/module",
+    "../../src/go",
   }
 
 -- wren dependency
@@ -116,7 +117,8 @@ project "wren_cli"
   -- todo: this has to be tested
   filter "system:macosx"
     systemversion "10.12"
-    links { "/Library/Frameworks/CoreFoundation.framework", "/Library/Frameworks/Security.framework" }
+    links { "http", "/Library/Frameworks/CoreFoundation.framework", "/Library/Frameworks/Security.framework" }
+    linkoptions {"-L../../src/go"}
     defines { "_DARWIN_USE_64_BIT_INODE=1", "_DARWIN_UNLIMITED_SELECT=1" }
     files {
       "../../deps/libuv/src/unix/bsd-ifaddrs.c",
